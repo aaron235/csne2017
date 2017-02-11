@@ -1,0 +1,30 @@
+!<!DOCTYPE html>
+
+<html>
+	<head>
+		{% block scripts %}
+			<script type="text/javascript" src="/static/main.js"></script>
+		{% endblock %}
+
+		{% block styles %}
+			<link type="text/css" rel="stylesheet" href="/static/main.css">
+			<link type="text/css" rel="stylesheet" href="/static/lib/normalize-css/normalize.css">
+		{% endblock %}
+	</head>
+
+	<body>
+		<header>
+
+		</header>
+
+		<main>
+			{% block main %}
+				Hello, world!
+			{% endblock %}
+		</main>
+
+		<footer>
+
+		</footer>
+	</body>
+</html>
