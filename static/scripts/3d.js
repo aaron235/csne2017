@@ -10,7 +10,7 @@ window.onload = function() {
 		antialias: true,
 		alpha: true }
 	);
-	renderer.setPixelRatio( window.devicePixelRatio )
+	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth * 0.9 , window.innerHeight * 0.9 );
 
 	// add it to the DOM
