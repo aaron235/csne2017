@@ -2,29 +2,35 @@ window.onload = function() {
 	// make a new Three scene and color it
 	var scene = new THREE.Scene();
 	scene.background = new THREE.Color( 0xffffff );
-	var camera = new THREE.PerspectiveCamera( 75, window.innerWidth*0.9 / window.innerHeight*0.9, 0.1, 1000 );
+	var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
 
 	// set up the renderer
 	var renderer = new THREE.WebGLRenderer({
 		antialias: true,
 		alpha: true }
 	);
-	renderer.setSize( window.innerWidth*0.9, window.innerHeight*0.9 );
+	renderer.setPixelRatio( window.devicePixelRatio )
+	renderer.setSize( window.innerWidth * 0.9 , window.innerHeight * 0.9 );
 
 	// add it to the DOM
 	document.getElementById( 'viewport' ).appendChild( renderer.domElement );
 
 	// addabox
-	var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-	var material = new THREE.MeshBasicMaterial( { color: 0x0033ff } );
-	var cube = new THREE.Mesh( geometry, material );
-	scene.add( cube );
+	var geometry = new THREE.IcosahedronGeometry( 1, 0 );
+	var material = new THREE.MeshBasicMaterial( {
+		color: 0x88ccff,
+		transparent:true,
+		opacity:0.8
+	} );
+	var shape = new THREE.Mesh( geometry, material );
+	scene.add( shape );
 
 	// edges geometry
-	var geometryEdges = new THREE.EdgesGeometry( cube.geometry ); // or WireframeGeometry
+	var geometryEdges = new THREE.EdgesGeometry( shape.geometry ); // or WireframeGeometry
 	var materialEdges = new THREE.LineBasicMaterial( { color: 0x000000, linewidth: 2 } );
 	var edges = new THREE.LineSegments( geometryEdges, materialEdges );
-	cube.add( edges ); // add wireframe as a child of the parent mesh
+	shape.add( edges ); // add wireframe as a child of the parent mesh
 
 	camera.position.z = 5;
 
@@ -35,11 +41,11 @@ window.onload = function() {
 	function render() {
 		t += 1/60;
 		requestAnimationFrame( render );
-		cube.rotation.x += 0.01;
-		cube.rotation.y += 0.01;
-		cube.scale.x = Math.sin( Math.PI * t * breatheRate ) + 2;
-		cube.scale.y = Math.sin( Math.PI * t * breatheRate ) + 2;
-		cube.scale.z = Math.sin( Math.PI * t * breatheRate ) + 2;
+		shape.rotation.x += 0.01;
+		shape.rotation.y += 0.01;
+		shape.scale.x = Math.sin( Math.PI * t * breatheRate ) * 0.75 + 1.5;
+		shape.scale.y = Math.sin( Math.PI * t * breatheRate ) * 0.75 + 1.5;
+		shape.scale.z = Math.sin( Math.PI * t * breatheRate ) * 0.75 + 1.5;
 
 		renderer.render( scene, camera );
 	}
