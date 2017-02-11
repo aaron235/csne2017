@@ -1,0 +1,22 @@
+* {
+	font-family: "Open Sans", sans-serif;
+}
+
+header, footer {
+	background-color: #000;
+	height: 2em;
+	width: 100%;
+	position: fixed;
+}
+
+header {
+	top: 0;
+}
+
+footer {
+	bottom: 0;
+}
+
+main {
+	margin: 4em;
+}

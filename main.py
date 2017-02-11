@@ -15,4 +15,9 @@ def main():
 	return render_template( 'main.html' )
 
 
+@app.route( '/breathe' )
+def breathe():
+	return render_template( 'breathe.html' )
+
+
 app.run()
