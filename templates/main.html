@@ -4,6 +4,7 @@
 	<head>
 		<meta charset=utf-8>
 		{% block scripts %}
+			<script type="text/javascript" src="https://threejs.org/build/three.js"></script>
 			<script type="text/javascript" src="/static/scripts/main.js"></script>
 		{% endblock %}
 
@@ -19,7 +20,7 @@
 
 		</header>
 
-		<main>
+		<main id="main">
 			{% block main %}
 				Hello, world!
 			{% endblock %}

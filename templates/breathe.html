@@ -1,1 +1,17 @@
 {% extends "main.html" %}
+
+{% block scripts %}
+	{{ super() }}
+	<script type="text/javascript" src="/static/scripts/3d.js"></script>
+{% endblock %}
+
+{% block styles %}
+	{{ super() }}
+	<link type="text/css" rel="stylesheet" href="/static/styles/breathe.css" />
+{% endblock %}
+
+{% block main %}
+	<div id="viewport">
+
+	</div>
+{% endblock %}
