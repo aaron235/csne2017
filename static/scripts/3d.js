@@ -55,19 +55,21 @@ window.onload = function() {
 	}
 	render();
 
-	var ws = new WebSocket('ws://localhost:5000/data');
+	var ws = new WebSocket( 'ws://localhost:5000/data' );
 	ws.onopen = function(){
 		/*Send a small message to the console once the connection is established */
 		console.log('Connection open!');
+		ws.send( JSON.stringify( {'lol': 'weeny'} ) );
 	};
 
 	ws.onmessage = function( e ) {
-		//d = JSON.parse(event.data);
-		console.log( "lol" );
+		console.log( e );
+		d = JSON.parse( e.data );
+		console.log( d );
 	};
 
 	ws.onerror = function( e ) {
 		//d = JSON.parse(event.data);
-		console.log( "lol" );
+		console.log( "lol error" );
 	};
 };
