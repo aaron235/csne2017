@@ -135,10 +135,12 @@ FREQ = np.array([
 
 class GuiFft:
 	def __init__(self):
+		self.printCount = 0
+		self.printNumber = 10
 		print("hi")
 		obci_gui = '/home/pico/src/OpenBCI_GUI/OpenBCI_GUI/application.linux64/OpenBCI_GUI'
 		proc = pexpect.spawn(obci_gui, cwd=os.path.dirname(obci_gui))
-
+		
 		data = np.zeros(124)
 
 		while True:
@@ -161,8 +163,13 @@ class GuiFft:
 		print("shutdown!")
 
 	def process_fft(self, channel, data, freq):
-		print (data[0])
-		print(self.power_fft(channel, data, freq))
+		if ( self.printCount == 0 ):
+			print( self.power_fft(channel, data, freq))
+			self.printCount += 1
+		elif ( self.printCount == self.printNumber ):
+			self.printCount = 0
+		else:
+			self.printCount += 1
 
 	def power_fft(self, channel, data, freq):
 		# indices corresponding to Gamma (<4Hz), Delta (4-7), Alpha (8-15), Mu (7.5-12.5) , SMR (13-15), Beta1 (16-20), Beta2 (20-31), Gamma (32-100)
