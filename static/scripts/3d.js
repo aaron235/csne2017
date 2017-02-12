@@ -49,9 +49,7 @@ window.onload = function() {
 	document.getElementById( 'viewport' ).appendChild( renderer.domElement );
 
 	// this gives us some nested polyhedra
-	shapes = makeGeometry( scene );
-	shape = shapes[0];
-	console.log( shapes );
+	window.visState.shapes = makeGeometry( scene );
 
 	shapes.map( function( shape ) {
 		scene.add( shape );
@@ -67,7 +65,7 @@ window.onload = function() {
 		scaleOffset = 0;
 		spinOffset = 1;
 
-		shapes.map( function( shape ) {
+		window.visState.shapes.map( function( shape ) {
 			shape.rotation.x += 0.01 * spinOffset;
 			shape.rotation.y += 0.01 * spinOffset;
 			shape.scale.x = Math.sin( Math.PI * window.visState.t * window.visState.breatheRate + scaleOffset ) * 0.75 + 1.5;
@@ -75,7 +73,6 @@ window.onload = function() {
 			shape.scale.z = Math.sin( Math.PI * window.visState.t * window.visState.breatheRate + scaleOffset ) * 0.75 + 1.5;
 			scaleOffset += 0.3;
 			spinOffset = -spinOffset;
-
 		} );
 
 		renderer.render( scene, camera );
@@ -126,6 +123,16 @@ ws.onmessage = function( e ) {
 	console.log( e );
 	d = JSON.parse( e.data );
 	console.log( d );
+
+	
+
+	window.visState.shapes.map( function( shape ) {
+		var material = new THREE.MeshBasicMaterial( {
+			color: 0x88ccff,
+			transparent:true,
+			opacity:0.5
+		} );
+	} );
 };
 
 ws.onerror = function( e ) {
