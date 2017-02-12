@@ -1,6 +1,5 @@
 from flask import Flask
 from flask import render_template
-from time import sleep as sleep
 import json
 from flask_uwsgi_websocket import GeventWebSocket
 
