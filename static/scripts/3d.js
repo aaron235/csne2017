@@ -1,3 +1,5 @@
+window.userState = {};
+
 window.onload = function() {
 	// make a new Three scene and color it
 	var scene = new THREE.Scene();
@@ -25,6 +27,8 @@ window.onload = function() {
 	} );
 	var shape = new THREE.Mesh( geometry, material );
 	scene.add( shape );
+	shape.castShadow = true;
+	shape.receiveShadow = true;
 
 	// edges geometry
 	var geometryEdges = new THREE.EdgesGeometry( shape.geometry ); // or WireframeGeometry
@@ -50,4 +54,20 @@ window.onload = function() {
 		renderer.render( scene, camera );
 	}
 	render();
+
+	var ws = new WebSocket('ws://localhost:5000/data');
+	ws.onopen = function(){
+		/*Send a small message to the console once the connection is established */
+		console.log('Connection open!');
+	};
+
+	ws.onmessage = function( e ) {
+		//d = JSON.parse(event.data);
+		console.log( "lol" );
+	};
+
+	ws.onerror = function( e ) {
+		//d = JSON.parse(event.data);
+		console.log( "lol" );
+	};
 };
