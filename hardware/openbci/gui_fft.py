@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 
+from flask import Flask
+from flask_uwsgi_websocket import GeventWebSocket
 import pexpect
 import os
 import numpy as np
+from multiprocess import Queue, Process
+import json
 
 FREQ = np.array([
 	0.0,
@@ -130,11 +134,14 @@ FREQ = np.array([
 	119.140625,
 	120.11719 ])
 
+app = Flask( name )
+ws = GeventWebSocket( app )
 
 class GuiFft:
 	def __init__(self):
 		self.printCount = 0
 		self.printNumber = 10
+		self.q = Queue()
 		print("hi")
 		obci_gui = '/home/pico/src/OpenBCI_GUI/OpenBCI_GUI/application.linux64/OpenBCI_GUI'
 		proc = pexpect.spawn(obci_gui, cwd=os.path.dirname(obci_gui))
@@ -161,18 +168,14 @@ class GuiFft:
 		print("shutdown!")
 
 	def process_fft(self, channel, data, freq):
-<<<<<<< HEAD
-		if ( self.printCount == 0 ):
-			print( self.power_fft(channel, data, freq))
-			self.printCount += 1
-		elif ( self.printCount == self.printNumber ):
-			self.printCount = 0
-		else:
-			self.printCount += 1
-=======
-		print( data[0] )
-		print( self.power_fft(channel, data, freq) )
->>>>>>> refs/remotes/origin/master
+		q.put_nowait( power_fft( self, channel, data, freq ) )
+		# if ( self.printCount == 0 ):
+		#	print( self.power_fft(channel, data, freq))
+		#	self.printCount += 1
+		# elif ( self.printCount == self.printNumber ):
+		#	self.printCount = 0
+		# else:
+		#	self.printCount += 1
 
 	def power_fft(self, channel, data, freq):
 		# indices corresponding to:
@@ -193,13 +196,31 @@ class GuiFft:
 		beta2_power = np.average(np.abs(data[(20 < freq) & (freq < 31)])**2)
 		beta_power = np.average(np.abs(data[(16 < freq) & (freq < 31)])**2)
 		gamma_power = np.average(np.abs(data[(32 < freq) & (freq < 100)])**2)
-		return [channel, delta_power, theta_power, alpha_power, mu_power, smr_power,
-				beta1_power, beta2_power, beta_power, gamma_power]
+		return {
+			'channel': channel,
+			'power': {
+				'delta': delta_power,
+				'theta': theta_power,
+				'alpha': alpha_power,
+				'mu': mu_power,
+				'smr': smr_power,
+				'beta1': beta1_power,
+				'beta2': beta2_power,
+				'beta': beta_power,
+				'gamma': gamma_power
+				}
+			}
 
+eegData = GuiFft()
+
+@ws.route( '/data' )
+def data( socket ):
+	while True:
+		if not eegData.q.empty():
+			socket.send( json.dumps( q.get() ) )
+			  
 
 if __name__ == '__main__':
-	GuiFft()
-<<<<<<< HEAD
- 
-=======
->>>>>>> refs/remotes/origin/master
+	app.run( gevent=100 )
+	
+
