@@ -19,18 +19,19 @@ ws.onmessage = function( e ) {
 		}
 	}
 	*/
-	e.data = d;
-	if (d.channel == 7) {
+	console.log('rcvd');
+	if (true) {//(d.channel == '7') {
 		var tmp = [];
-		tmp[0] = d.power.delta;
-		tmp[1] = d.power.theta;
-		tmp[2] = d.power.alpha;
-		tmp[3] = d.power.mu;
-		tmp[4] = d.power.smr;
-		tmp[5] = d.power.beta1;
-		tmp[6] = d.power.beta2;
-		tmp[7] = d.power.beta;
-		tmp[8] = d.power.gamma;
+		var data = JSON.parse( e.data );
+		tmp[0] = parseFloat(data.power.delta).toFixed( 5 );
+		tmp[1] = parseFloat(data.power.theta).toFixed( 5 );
+		tmp[2] = parseFloat(data.power.alpha).toFixed( 5 );
+		tmp[3] = parseFloat(data.power.mu).toFixed( 5 );
+		tmp[4] = parseFloat(data.power.smr).toFixed( 5 );
+		tmp[5] = parseFloat(data.power.beta1).toFixed( 5 );
+		tmp[6] = parseFloat(data.power.beta2).toFixed( 5 );
+		tmp[7] = parseFloat(data.power.beta).toFixed( 5 );
+		tmp[8] = parseFloat(data.power.gamma).toFixed( 5 );
 		update_measure(tmp);
 	}
 }
