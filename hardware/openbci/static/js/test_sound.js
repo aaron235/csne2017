@@ -2,6 +2,8 @@
 
 var ws = new WebSocket( 'ws://localhost:5001/data' )
 
+var mode = 0; // 0 meditation, 1 adhd
+
 ws.onmessage = function( e ) {
 	/*
 	looks like:
@@ -32,7 +34,7 @@ ws.onmessage = function( e ) {
 		tmp[6] = parseFloat(data.power.beta2).toFixed( 5 );
 		tmp[7] = parseFloat(data.power.beta).toFixed( 5 );
 		tmp[8] = parseFloat(data.power.gamma).toFixed( 5 );
-		update_measure(tmp);
+		update_measure(data.channel, tmp);
 	}
 }
 
@@ -40,7 +42,7 @@ var score = 0;// 100;
 var tracks = [];
 var num_tracks = 4;
 
-var measured = []; // size 9
+var measured = [][]; // size 9
 var bmin = [];
 var bmax = [];
 
@@ -67,7 +69,7 @@ $(document).ready(function() {
 
 	$('#bminbutton').click(function() {
 		for (var i = 0; i < 9; i++) {
-			bmin[i] = measured[i];
+			bmin[i] = measured[0][i];
 		}
 		$('#bmin0').html(bmin[0]);
 		$('#bmin1').html(bmin[1]);
@@ -81,7 +83,7 @@ $(document).ready(function() {
 	});
 	$('#bmaxbutton').click(function() {
 		for (var i = 0; i < 9; i++) {
-			bmax[i] = measured[i];
+			bmax[i] = measured[0][i];
 		}
 		$('#bmax0').html(bmax[0]);
 		$('#bmax1').html(bmax[1]);
@@ -94,26 +96,35 @@ $(document).ready(function() {
 		$('#bmax8').html(bmax[8]);
 	});
 	$('#validatebutton').click(function() {
-		update_measure([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+		//update_measure([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 	});
 	//update_measure([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+	$('#meditationbutton').click(function() {
+		mode = 0;
+	});
+	$('#adhdbutton').click(function() {
+		mode = 1;
+	});
 });
 
-function update_measure(measurements) {
+function update_measure(channel, measurements) {
 	console.log("update");
 	for (var i = 0; i < 9; i++) {
-		measured[i] = measurements[i];
+		measured[channel][i] = measurements[i];
 	}
-	$('#m0').html(measured[0]);
-	$('#m1').html(measured[1]);
-	$('#m2').html(measured[2]);
-	$('#m3').html(measured[3]);
-	$('#m4').html(measured[4]);
-	$('#m5').html(measured[5]);
-	$('#m6').html(measured[6]);
-	$('#m7').html(measured[7]);
-	$('#m8').html(measured[8]);
+	$('#m0').html(measured[channel][0]);
+	$('#m1').html(measured[channel][1]);
+	$('#m2').html(measured[channel][2]);
+	$('#m3').html(measured[channel][3]);
+	$('#m4').html(measured[channel][4]);
+	$('#m5').html(measured[channel][5]);
+	$('#m6').html(measured[channel][6]);
+	$('#m7').html(measured[channel][7]);
+	$('#m8').html(measured[channel][8]);
 
-	score = (((measured[1] + measured[2]) / 2) / (measured[7])) / (((bmax[1] + bmax[2]) / 2) / (bmax[7]))
+	score = (((measured[channel][1] + measured[channel][2]) / 2) / (measured[channel][7])) / (((bmax[1] + bmax[2]) / 2) / (bmax[7]))
+
+	// adhd
+	score = Math.abs(measured[3][2] - measured[10][2]) / ((measured[3][2] + measured[10][2]) / 2);
 	$('#score').val(score);
 }
