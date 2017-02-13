@@ -13,7 +13,7 @@ table, tr {
 }
 
 td {
-  width: auto;
+  width: 12em;
   text-align: right;
   border: 4px #555 solid;
 }
