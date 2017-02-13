@@ -5,7 +5,7 @@ from flask_uwsgi_websocket import GeventWebSocket
 import pexpect
 import os
 import numpy as np
-from multiprocess import Queue, Process
+from multiprocessing import Queue, Process
 import json
 
 FREQ = np.array([
@@ -134,93 +134,83 @@ FREQ = np.array([
 	119.140625,
 	120.11719 ])
 
-app = Flask( name )
+app = Flask( __name__ )
 ws = GeventWebSocket( app )
 
-class GuiFft:
-	def __init__(self):
-		self.printCount = 0
-		self.printNumber = 10
-		self.q = Queue()
-		print("hi")
-		obci_gui = '/home/pico/src/OpenBCI_GUI/OpenBCI_GUI/application.linux64/OpenBCI_GUI'
-		proc = pexpect.spawn(obci_gui, cwd=os.path.dirname(obci_gui))
-		
-		data = np.zeros(124)
 
-		while True:
-			try:
-				proc.expect('\n')
-				line = proc.before.rstrip().decode('utf-8')
-				if line == "----new_chan_data----":
-					proc.expect('\n')
-					channel = int(proc.before.rstrip().decode('utf-8'))
-					i = 0
-					while (i < 124):
-						proc.expect('\n')
-						data_maybe = str(proc.before.rstrip().decode('utf-8'))
-						if (data_maybe[0] == '&'):
-							data[i] = float(data_maybe[1:])  # float(proc.before.rstrip().decode('utf-8'))
-							i += 1
-					self.process_fft(channel, data, FREQ)
-			except pexpect.EOF:
-				break
-		print("shutdown!")
+def getData( q ):
+	print("hi")
+	obci_gui = '/home/mint/csne2017/hardware/openbci/openbci_gui/OpenBCI_GUI'
+	proc = pexpect.spawn(obci_gui, cwd=os.path.dirname(obci_gui))
 
-	def process_fft(self, channel, data, freq):
-		q.put_nowait( power_fft( self, channel, data, freq ) )
-		# if ( self.printCount == 0 ):
-		#	print( self.power_fft(channel, data, freq))
-		#	self.printCount += 1
-		# elif ( self.printCount == self.printNumber ):
-		#	self.printCount = 0
-		# else:
-		#	self.printCount += 1
+	data = np.zeros(124)
 
-	def power_fft(self, channel, data, freq):
-		# indices corresponding to:
-		# Gamma (<4Hz)
-		# Delta (4-7)
-		# Alpha (8-15)
-		# Mu (7.5-12.5)
-		# SMR (13-15)
-		# Beta1 (16-20)
-		# Beta2 (20-31)
-		# Gamma (32-100)
-		delta_power = np.average(np.abs(data[freq < 4])**2)
-		theta_power = np.average(np.abs(data[(4 < freq) & (freq < 7)])**2)
-		alpha_power = np.average(np.abs(data[(8 < freq) & (freq < 15)])**2)
-		mu_power = np.average(np.abs(data[(7.5 < freq) & (freq < 12.5)])**2)
-		smr_power = np.average(np.abs(data[(13 < freq) & (freq < 15)])**2)
-		beta1_power = np.average(np.abs(data[(16 < freq) & (freq < 20)])**2)
-		beta2_power = np.average(np.abs(data[(20 < freq) & (freq < 31)])**2)
-		beta_power = np.average(np.abs(data[(16 < freq) & (freq < 31)])**2)
-		gamma_power = np.average(np.abs(data[(32 < freq) & (freq < 100)])**2)
-		return {
-			'channel': channel,
-			'power': {
-				'delta': delta_power,
-				'theta': theta_power,
-				'alpha': alpha_power,
-				'mu': mu_power,
-				'smr': smr_power,
-				'beta1': beta1_power,
-				'beta2': beta2_power,
-				'beta': beta_power,
-				'gamma': gamma_power
-				}
-			}
+	while True:
+		try:
+			proc.expect('\n', timeout=None)
+			line = proc.before.rstrip().decode('utf-8')
+			if line == "----new_chan_data----":
+				proc.expect('\n', timeout=None)
+				channel_maybe = str(proc.before.rstrip().decode('utf-8'))
+				while not (channel_maybe.isdigit()):
+					proc.expect('\n', timeout=None)
+					channel_maybe = str(proc.before.rstrip().decode('utf-8'))
+				channel = int(channel_maybe) #int(proc.before.rstrip().decode('utf-8'))
+				i = 0
+				while (i < 124):
+					proc.expect('\n', timeout=None)
+					data_maybe = str(proc.before.rstrip().decode('utf-8'))
+					if (data_maybe[0] == '&'):
+						data[i] = float(data_maybe[1:])  # float(proc.before.rstrip().decode('utf-8'))
+					i += 1
+				# Process(target=self.process_fft, args=(channel, data, FREQ, self.q) )
+				delta_power = np.average(np.abs(data[FREQ < 4])**2)
+				theta_power = np.average(np.abs(data[(4 < FREQ) & (FREQ < 7)])**2)
+				alpha_power = np.average(np.abs(data[(8 < FREQ) & (FREQ < 15)])**2)
+				mu_power = np.average(np.abs(data[(7.5 < FREQ) & (FREQ < 12.5)])**2)
+				smr_power = np.average(np.abs(data[(13 < FREQ) & (FREQ < 15)])**2)
+				beta1_power = np.average(np.abs(data[(16 < FREQ) & (FREQ < 20)])**2)
+				beta2_power = np.average(np.abs(data[(20 < FREQ) & (FREQ < 31)])**2)
+				beta_power = np.average(np.abs(data[(16 < FREQ) & (FREQ < 31)])**2)
+				gamma_power = np.average(np.abs(data[(32 < FREQ) & (FREQ < 100)])**2)
 
-eegData = GuiFft()
+				q.put( {
+					'channel': channel,
+					'power': {
+						'delta': delta_power,
+						'theta': theta_power,
+						'alpha': alpha_power,
+						'mu': mu_power,
+						'smr': smr_power,
+						'beta1': beta1_power,
+						'beta2': beta2_power,
+						'beta': beta_power,
+						'gamma': gamma_power
+						}
+					} )
+
+		except pexpect.EOF:
+			break
+	print("shutdown!")
+
+q = Queue()
+
+dataProcess = Process( target=getData, args=(q,) )
+dataProcess.start()
+
+@app.route( '/' )
+def main():
+	return 'hi!'
 
 @ws.route( '/data' )
 def data( socket ):
 	while True:
-		if not eegData.q.empty():
+		if not q.empty():
+			print( "lol" )
 			socket.send( json.dumps( q.get() ) )
-			  
+
 
 if __name__ == '__main__':
-	app.run( gevent=100 )
-	
+	app.run( gevent=100, port=5001 )
 
+print( "blocks" )
