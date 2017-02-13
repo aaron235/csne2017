@@ -122,9 +122,10 @@ function update_measure(channel, measurements) {
 	$('#m7').html(measured[channel][7]);
 	$('#m8').html(measured[channel][8]);
 
-	score = (((measured[channel][1] + measured[channel][2]) / 2) / (measured[channel][7])) / (((bmax[1] + bmax[2]) / 2) / (bmax[7]))
-
-	// adhd
-	score = Math.abs(measured[3][2] - measured[10][2]) / ((measured[3][2] + measured[10][2]) / 2);
+	if (mode == 0) {
+		score = (((measured[channel][1] + measured[channel][2]) / 2) / (measured[channel][7])) / (((bmax[1] + bmax[2]) / 2) / (bmax[7]))
+	} else { // adhd
+		score = Math.abs(measured[3][2] - measured[10][2]) / ((measured[3][2] + measured[10][2]) / 2);
+	}
 	$('#score').val(score);
 }
