@@ -4,12 +4,71 @@
 		<title>test</title>
 		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 		<script src="js/test_sound.js"></script>
+		<style>
+			td {
+				padding: 8px;
+			}
+			.data {
+				width: 32px;
+			}
+		</style>
 	</head>
 	<body>
-		<h1>test</h1>
-		<button>generate baseline</button>
+		<h1>openbci feedback</h1>
+		<h2>data</h2>
+		<table border>
+			<tr>
+				<td></td>
+				<td class="data">delta</td>
+				<td class="data">theta</td>
+				<td class="data">alpha</td>
+				<td class="data">mu</td>
+				<td class="data">smr</td>
+				<td class="data">beta1</td>
+				<td class="data">beta2</td>
+				<td class="data">beta</td>
+				<td class="data">gamma</td>
+			</tr>
+			<tr>
+				<td>measured</td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+			</tr>
+			<tr>
+				<td><button>baseline min</button></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+			</tr>
+			<tr>
+				<td><button>baseline max</button></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+				<td class="data"></td>
+			</tr>
+		</table><br />
 		<button>validate</button><br /><br />
 		score: <input type="number" id="score" /><br />
+		<h2>feedback</h2>
 		<audio id="track_0" controls autoplay loop>
 			<source src="sounds/1.mp3" type="audio/mp3">
 		</audio>
