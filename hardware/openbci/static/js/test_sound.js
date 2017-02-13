@@ -2,8 +2,23 @@
 
 var ws = new WebSocket( 'ws://localhost:5001/data' )
 
-ws.onmessage = function() {
-	
+ws.onmessage = function( e ) {
+	/*
+	looks like:
+	'channel': channel,
+	'power': {
+		'delta': delta_power,
+		'theta': theta_power,
+		'alpha': alpha_power,
+		'mu': mu_power,
+		'smr': smr_power,
+		'beta1': beta1_power,
+		'beta2': beta2_power,
+		'beta': beta_power,
+		'gamma': gamma_power
+		}
+	}
+	*/
 }
 
 var score = 0;// 100;
