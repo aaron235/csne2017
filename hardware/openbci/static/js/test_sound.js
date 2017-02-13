@@ -1,5 +1,11 @@
 "use strict";
 
+var ws = new WebSocket( 'ws://localhost:5001/data' )
+
+ws.onmessage = function() {
+	
+}
+
 var score = 0;// 100;
 var tracks = [];
 var num_tracks = 4;
