@@ -19,6 +19,20 @@ ws.onmessage = function( e ) {
 		}
 	}
 	*/
+	e.data = d;
+	if (d.channel == 7) {
+		var tmp = [];
+		tmp[0] = d.power.delta;
+		tmp[1] = d.power.theta;
+		tmp[2] = d.power.alpha;
+		tmp[3] = d.power.mu;
+		tmp[4] = d.power.smr;
+		tmp[5] = d.power.beta1;
+		tmp[6] = d.power.beta2;
+		tmp[7] = d.power.beta;
+		tmp[8] = d.power.gamma;
+		update_measure(tmp);
+	}
 }
 
 var score = 0;// 100;
