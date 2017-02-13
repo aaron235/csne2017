@@ -2,7 +2,7 @@
 
 var score = 0;// 100;
 var tracks = [];
-var num_tracks = 9;
+var num_tracks = 4;
 
 $(document).ready(function() {
 	$('#score').change(function() {
@@ -12,11 +12,11 @@ $(document).ready(function() {
 		tracks[1] = document.getElementById('track_1')
 		tracks[2] = document.getElementById('track_2')
 		tracks[3] = document.getElementById('track_3')
-		tracks[4] = document.getElementById('track_4')
-		tracks[5] = document.getElementById('track_5')
-		tracks[6] = document.getElementById('track_6')
-		tracks[7] = document.getElementById('track_7')
-		tracks[8] = document.getElementById('track_8')
+		// tracks[4] = document.getElementById('track_4')
+		// tracks[5] = document.getElementById('track_5')
+		// tracks[6] = document.getElementById('track_6')
+		// tracks[7] = document.getElementById('track_7')
+		// tracks[8] = document.getElementById('track_8')
 
 		for (var i = 0; i < num_tracks; i++) {
 			//var vol = (score / (100 * ((i + 1) / num_tracks))); // alternative method
