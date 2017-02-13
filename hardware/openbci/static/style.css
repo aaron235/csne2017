@@ -6,14 +6,15 @@
 
 table {
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 table, tr {
-  width: 100%;
+  width: 80em;
 }
 
 td {
-  width: 12em;
+  width: 10em;
   text-align: right;
   border: 4px #555 solid;
 }
