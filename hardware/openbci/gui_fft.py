@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_uwsgi_websocket import GeventWebSocket
 import pexpect
 import os
@@ -200,7 +200,7 @@ dataProcess.start()
 
 @app.route( '/' )
 def main():
-	return 'hi!'
+	return render_template( 'test_sound.html' )
 
 @ws.route( '/data' )
 def data( socket ):
