@@ -1,0 +1,19 @@
+* {
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+}
+
+
+table {
+  border-collapse: collapse;
+}
+
+table, tr {
+  width: 100%;
+}
+
+td {
+  width: auto;
+  text-align: right;
+  border: 4px #555 solid;
+}
