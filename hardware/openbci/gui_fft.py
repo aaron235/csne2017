@@ -206,7 +206,6 @@ def main():
 def data( socket ):
 	while True:
 		if not q.empty():
-			print( "lol" )
 			socket.send( json.dumps( q.get() ) )
 
 
